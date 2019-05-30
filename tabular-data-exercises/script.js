@@ -14,9 +14,7 @@ getData().then(table => {
   const nHemiTemps = [];
   const sHemiTemps = [];
 
-  const globalAvgTempInCelc = 14.25;
-  const nHemiAvgTempInCelc = 15.2;
-  const sHemiAvgTempInCelc = 13.3;
+  const globalAvgTempInCelc = 14;
 
   rows.forEach(row => {
     const columns = row.split(',');
@@ -35,14 +33,14 @@ getData().then(table => {
     globalTemps.push(avgGlobalTempInFahr);
 
     const avgNorthHemiTempInCelc =
-      parseFloat(diffFromNorthHemiMean) + nHemiAvgTempInCelc;
+      parseFloat(diffFromNorthHemiMean) + globalAvgTempInCelc;
     const avgNorthHemiTempInFahr =
       Math.round(convertFromCelcToFahr(avgNorthHemiTempInCelc) * 100) / 100;
     //nHemiTemps.push(avgNorthHemiTempInCelc);
     nHemiTemps.push(avgNorthHemiTempInFahr);
 
     const avgSouthHemiTempInCelc =
-      parseFloat(diffFromSouthHemiMean) + sHemiAvgTempInCelc;
+      parseFloat(diffFromSouthHemiMean) + globalAvgTempInCelc;
     const avgSouthHemiTempInFahr =
       Math.round(convertFromCelcToFahr(avgSouthHemiTempInCelc) * 100) / 100;
     //sHemiTemps.push(avgSouthHemiTempInCelc);
