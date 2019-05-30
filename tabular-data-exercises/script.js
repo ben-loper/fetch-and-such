@@ -16,7 +16,16 @@ getData().then(table => {
     const columns = row.split(',');
 
     labels.push(columns[0]);
-    data.push(columns[1]);
+
+    const diffFromGlobalMean = columns[1];
+
+    const avgTempInCelc = parseFloat(diffFromGlobalMean) + 14;
+
+    const avgTempInFahr =
+      Math.round(convertFromCelcToFahr(avgTempInCelc) * 100) / 100;
+
+    //data.push(avgTempInCelc);
+    data.push(avgTempInFahr);
   });
 
   generateChart(labels, data);
@@ -33,10 +42,11 @@ function generateChart(years, temps) {
       labels: years,
       datasets: [
         {
-          label: 'Change in Global Surface Temperature',
+          label:
+            'Combined Land-Surface Air and Sea-Surface Water Temperature in F°',
           data: temps,
           fill: false,
-          borderColor: '#922893',
+          borderColor: '#FF7F7F',
           borderWidth: 2,
           pointBorderWidth: 1
         }
@@ -44,6 +54,23 @@ function generateChart(years, temps) {
     },
 
     // Configuration options go here
-    options: {}
+    options: {
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              // Include a degree symbol in the ticks
+              callback: function(value) {
+                return value + '°';
+              }
+            }
+          }
+        ]
+      }
+    }
   });
+}
+
+function convertFromCelcToFahr(temp) {
+  return (temp * 9) / 5 + 32;
 }
