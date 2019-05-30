@@ -10,7 +10,13 @@ getData().then(table => {
   rows.shift();
 
   const labels = [];
-  const data = [];
+  const globalTemps = [];
+  const nHemiTemps = [];
+  const sHemiTemps = [];
+
+  const globalAvgTempInCelc = 14.25;
+  const nHemiAvgTempInCelc = 15.2;
+  const sHemiAvgTempInCelc = 13.3;
 
   rows.forEach(row => {
     const columns = row.split(',');
@@ -18,20 +24,35 @@ getData().then(table => {
     labels.push(columns[0]);
 
     const diffFromGlobalMean = columns[1];
+    const diffFromNorthHemiMean = columns[2];
+    const diffFromSouthHemiMean = columns[3];
 
-    const avgTempInCelc = parseFloat(diffFromGlobalMean) + 14;
+    const avgGlobalTempInCelc =
+      parseFloat(diffFromGlobalMean) + globalAvgTempInCelc;
+    const avgGlobalTempInFahr =
+      Math.round(convertFromCelcToFahr(avgGlobalTempInCelc) * 100) / 100;
+    //globalTemps.push(avgGlobalTempInCelc);
+    globalTemps.push(avgGlobalTempInFahr);
 
-    const avgTempInFahr =
-      Math.round(convertFromCelcToFahr(avgTempInCelc) * 100) / 100;
+    const avgNorthHemiTempInCelc =
+      parseFloat(diffFromNorthHemiMean) + nHemiAvgTempInCelc;
+    const avgNorthHemiTempInFahr =
+      Math.round(convertFromCelcToFahr(avgNorthHemiTempInCelc) * 100) / 100;
+    //nHemiTemps.push(avgNorthHemiTempInCelc);
+    nHemiTemps.push(avgNorthHemiTempInFahr);
 
-    //data.push(avgTempInCelc);
-    data.push(avgTempInFahr);
+    const avgSouthHemiTempInCelc =
+      parseFloat(diffFromSouthHemiMean) + sHemiAvgTempInCelc;
+    const avgSouthHemiTempInFahr =
+      Math.round(convertFromCelcToFahr(avgSouthHemiTempInCelc) * 100) / 100;
+    //sHemiTemps.push(avgSouthHemiTempInCelc);
+    sHemiTemps.push(avgSouthHemiTempInFahr);
   });
 
-  generateChart(labels, data);
+  generateChart(labels, globalTemps, nHemiTemps, sHemiTemps);
 });
 
-function generateChart(years, temps) {
+function generateChart(years, globalTemps, nHemiTemps, sHemiTemps) {
   const ctx = document.getElementById('myChart').getContext('2d');
   const chart = new Chart(ctx, {
     // The type of chart we want to create
@@ -42,11 +63,26 @@ function generateChart(years, temps) {
       labels: years,
       datasets: [
         {
-          label:
-            'Combined Land-Surface Air and Sea-Surface Water Temperature in F°',
-          data: temps,
+          label: 'Average Global Temperature in F°',
+          data: globalTemps,
           fill: false,
           borderColor: '#FF7F7F',
+          borderWidth: 2,
+          pointBorderWidth: 1
+        },
+        {
+          label: 'Average Northern Hemisphere Temperature in F°',
+          data: nHemiTemps,
+          fill: false,
+          borderColor: '#73C2FB',
+          borderWidth: 2,
+          pointBorderWidth: 1
+        },
+        {
+          label: 'Average Southern Hemisphere Temperature in F°',
+          data: sHemiTemps,
+          fill: false,
+          borderColor: '#99ff99',
           borderWidth: 2,
           pointBorderWidth: 1
         }
